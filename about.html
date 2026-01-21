@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Cheese Enterprise</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .about-hero {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .about-hero h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, var(--cheese-yellow), var(--cheese-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .about-hero p {
+            font-size: 1.3rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mission-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .mission-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 204, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--cheese-yellow);
+        }
+
+        .mission-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .mission-card h3 {
+            color: var(--cheese-yellow);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .team-section {
+            margin: 4rem 0;
+        }
+
+        .team-section h2 {
+            text-align: center;
+            color: var(--cheese-yellow);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .team-member {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: scale(1.05);
+        }
+
+        .team-avatar {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .team-name {
+            font-size: 1.2rem;
+            color: var(--cheese-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        .team-role {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .timeline {
+            margin: 4rem 0;
+            position: relative;
+        }
+
+        .timeline h2 {
+            text-align: center;
+            color: var(--cheese-yellow);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 100px;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--cheese-yellow), var(--cheese-orange));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 204, 0, 0.2);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: auto;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-year {
+            color: var(--cheese-yellow);
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--cheese-yellow);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .contact-section {
+            background: linear-gradient(135deg, rgba(255, 107, 0, 0.2), rgba(255, 204, 0, 0.2));
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .contact-section h2 {
+            color: var(--cheese-yellow);
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            font-size: 2.5rem;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            transform: scale(1.2);
+        }
+
+        .newsletter {
+            margin-top: 2rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .newsletter-input {
+            padding: 1rem 1.5rem;
+            border: 2px solid rgba(255, 204, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            color: white;
+            font-size: 1rem;
+            width: 300px;
+            max-width: 100%;
+        }
+
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: var(--cheese-yellow);
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .timeline-line {
+                left: 20px;
+            }
+            .timeline-content {
+                width: 80%;
+                margin-left: 50px !important;
+                text-align: left !important;
+            }
+            .timeline-dot {
+                left: 20px;
+            }
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 15px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--cheese-yellow);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .cheese-philosophy {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 3rem;
+            border-radius: 20px;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .cheese-philosophy h2 {
+            color: var(--cheese-yellow);
+            margin-bottom: 1.5rem;
+        }
+
+        .cheese-philosophy blockquote {
+            font-size: 1.5rem;
+            font-style: italic;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .cheese-philosophy cite {
+            display: block;
+            margin-top: 1rem;
+            color: var(--cheese-yellow);
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span>🧀</span> Cheese Enterprise
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="games.html">Games</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="about.html" class="active">About</a></li>
+        </ul>
+        <div class="mobile-menu" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="about-hero">
+            <h1>About Cheese Enterprise</h1>
+            <p>We're on a mission to spread cheesy joy across the universe, one smile at a time! 🧀</p>
+        </section>
+
+        <div class="container">
+            <div class="stats-section">
+                <div class="stat-box">
+                    <div class="stat-number" data-target="50">0</div>
+                    <div class="stat-label">Cheese Types Featured</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" data-target="3">0</div>
+                    <div class="stat-label">Fun Games</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" data-target="1000">0</div>
+                    <div class="stat-label">Happy Visitors</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" data-target="100">0</div>
+                    <div class="stat-label">% Cheese Passion</div>
+                </div>
+            </div>
+
+            <div class="mission-section">
+                <div class="mission-card">
+                    <div class="mission-icon">🎯</div>
+                    <h3>Our Mission</h3>
+                    <p>To create the most entertaining and educational cheese-themed experience on the internet!</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">👁️</div>
+                    <h3>Our Vision</h3>
+                    <p>A world where everyone appreciates the wonder and joy that cheese brings to our lives.</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">💛</div>
+                    <h3>Our Values</h3>
+                    <p>Fun, creativity, education, and spreading smiles through the universal love of cheese!</p>
+                </div>
+            </div>
+
+            <div class="cheese-philosophy">
+                <h2>🧀 The Cheese Philosophy</h2>
+                <blockquote>
+                    "Age is something that doesn't matter, unless you are a cheese."
+                </blockquote>
+                <cite>— Luis Buñuel</cite>
+            </div>
+
+            <div class="team-section">
+                <h2>Meet Our Team</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <span class="team-avatar">🐄</span>
+                        <div class="team-name">Bessie the Cow</div>
+                        <div class="team-role">Chief Milk Officer</div>
+                    </div>
+                    <div class="team-member">
+                        <span class="team-avatar">🐐</span>
+                        <div class="team-name">Gary the Goat</div>
+                        <div class="team-role">Head of Feta Division</div>
+                    </div>
+                    <div class="team-member">
+                        <span class="team-avatar">🧀</span>
+                        <div class="team-name">Cheddar Chad</div>
+                        <div class="team-role">Game Designer</div>
+                    </div>
+                    <div class="team-member">
+                        <span class="team-avatar">🥛</span>
+                        <div class="team-name">Milky Max</div>
+                        <div class="team-role">Quality Assurance</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <h2>Our Cheesy Journey</h2>
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2024</div>
+                        <p>Cheese Enterprise was born with a dream to make the world cheesier!</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">Week 1</div>
+                        <p>Launched the "Raining Cheese" song that went viral!</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">Week 2</div>
+                        <p>Released our first three games: Cheese Catcher, Cow Clicker, and Memory Match!</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-year">Future</div>
+                        <p>World domination through cheese! (Just kidding... maybe 🧀)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-section">
+                <h2>Get in Touch</h2>
+                <p>Have a cheesy idea or just want to say hello? We'd love to hear from you!</p>
+
+                <div class="social-links">
+                    <a href="#" class="social-link" title="Twitter">🐦</a>
+                    <a href="#" class="social-link" title="Instagram">📸</a>
+                    <a href="#" class="social-link" title="YouTube">🎬</a>
+                    <a href="#" class="social-link" title="TikTok">🎵</a>
+                    <a href="#" class="social-link" title="Discord">💬</a>
+                </div>
+
+                <div class="newsletter">
+                    <h3>Join the Cheese Newsletter!</h3>
+                    <p>Get weekly cheese facts, game updates, and exclusive content!</p>
+                    <div class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Enter your email" id="emailInput">
+                        <button class="btn btn-primary" onclick="subscribe()">Subscribe 🧀</button>
+                    </div>
+                    <p id="subscribeMessage" style="margin-top: 1rem; color: var(--cheese-yellow);"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>🧀 Cheese Enterprise © 2024 - Made with 100% pure dairy love 🧀</p>
+    </footer>
+
+    <script>
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number[data-target]');
+            counters.forEach(counter => {
+                const target = parseInt(counter.dataset.target);
+                const increment = target / 50;
+                let current = 0;
+
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.textContent = Math.ceil(current);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+
+                // Start animation when element is in view
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateCounter();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+
+                observer.observe(counter);
+            });
+        }
+
+        function subscribe() {
+            const email = document.getElementById('emailInput').value;
+            const message = document.getElementById('subscribeMessage');
+
+            if (email && email.includes('@')) {
+                message.textContent = '🎉 Thanks for subscribing! Welcome to the cheese family!';
+                document.getElementById('emailInput').value = '';
+            } else {
+                message.textContent = '⚠️ Please enter a valid email address!';
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        window.onload = function() {
+            createStars();
+            animateCounters();
+        };
+    </script>
+</body>
+</html>

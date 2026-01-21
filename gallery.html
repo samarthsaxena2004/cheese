@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheese Gallery - Cheese Enterprise</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .gallery-hero {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .gallery-hero h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, var(--cheese-yellow), var(--cheese-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .filter-tab {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(255, 204, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .filter-tab:hover, .filter-tab.active {
+            border-color: var(--cheese-yellow);
+            background: rgba(255, 204, 0, 0.2);
+            color: var(--cheese-yellow);
+        }
+
+        .cheese-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .cheese-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 204, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .cheese-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--cheese-yellow);
+            box-shadow: 0 20px 40px rgba(255, 204, 0, 0.2);
+        }
+
+        .cheese-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            background: linear-gradient(135deg, rgba(255, 204, 0, 0.2), rgba(255, 107, 0, 0.2));
+        }
+
+        .cheese-info {
+            padding: 1.5rem;
+        }
+
+        .cheese-name {
+            font-size: 1.5rem;
+            color: var(--cheese-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        .cheese-origin {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cheese-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .cheese-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .cheese-tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 204, 0, 0.2);
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--cheese-yellow);
+        }
+
+        .fun-facts {
+            background: linear-gradient(135deg, rgba(255, 107, 0, 0.2), rgba(255, 204, 0, 0.2));
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .fun-facts h2 {
+            color: var(--cheese-yellow);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .fact-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .fact-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .fact-title {
+            font-size: 1.2rem;
+            color: var(--cheese-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        .cheese-quiz {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .cheese-quiz h2 {
+            color: var(--cheese-yellow);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-question {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .quiz-option {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--cheese-yellow);
+        }
+
+        .quiz-option.correct {
+            background: rgba(39, 174, 96, 0.5);
+            border-color: #27ae60;
+        }
+
+        .quiz-option.wrong {
+            background: rgba(231, 76, 60, 0.5);
+            border-color: #e74c3c;
+        }
+
+        .quiz-result {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            min-height: 30px;
+        }
+
+        .world-map {
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .world-map h2 {
+            color: var(--cheese-yellow);
+            margin-bottom: 1rem;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .country-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .country-card:hover {
+            transform: scale(1.05);
+            background: rgba(255, 204, 0, 0.2);
+        }
+
+        .country-flag {
+            font-size: 2.5rem;
+        }
+
+        .country-name {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .country-cheese {
+            font-size: 0.8rem;
+            color: var(--cheese-yellow);
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span>🧀</span> Cheese Enterprise
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="games.html">Games</a></li>
+            <li><a href="gallery.html" class="active">Gallery</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="mobile-menu" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="gallery-hero">
+            <h1>🧀 Cheese Gallery</h1>
+            <p>Explore the wonderful world of cheese from around the globe!</p>
+        </section>
+
+        <div class="container">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterCheese('all')">All</button>
+                <button class="filter-tab" onclick="filterCheese('hard')">Hard</button>
+                <button class="filter-tab" onclick="filterCheese('soft')">Soft</button>
+                <button class="filter-tab" onclick="filterCheese('fresh')">Fresh</button>
+                <button class="filter-tab" onclick="filterCheese('blue')">Blue</button>
+            </div>
+
+            <div class="cheese-grid" id="cheeseGrid"></div>
+
+            <div class="world-map">
+                <h2>🌍 Cheese Around the World</h2>
+                <p>Discover famous cheeses from different countries</p>
+                <div class="map-grid">
+                    <div class="country-card">
+                        <div class="country-flag">🇫🇷</div>
+                        <div class="country-name">France</div>
+                        <div class="country-cheese">Brie, Camembert</div>
+                    </div>
+                    <div class="country-card">
+                        <div class="country-flag">🇮🇹</div>
+                        <div class="country-name">Italy</div>
+                        <div class="country-cheese">Parmesan, Mozzarella</div>
+                    </div>
+                    <div class="country-card">
+                        <div class="country-flag">🇨🇭</div>
+                        <div class="country-name">Switzerland</div>
+                        <div class="country-cheese">Gruyère, Emmental</div>
+                    </div>
+                    <div class="country-card">
+                        <div class="country-flag">🇳🇱</div>
+                        <div class="country-name">Netherlands</div>
+                        <div class="country-cheese">Gouda, Edam</div>
+                    </div>
+                    <div class="country-card">
+                        <div class="country-flag">🇬🇷</div>
+                        <div class="country-name">Greece</div>
+                        <div class="country-cheese">Feta</div>
+                    </div>
+                    <div class="country-card">
+                        <div class="country-flag">🇬🇧</div>
+                        <div class="country-name">UK</div>
+                        <div class="country-cheese">Cheddar, Stilton</div>
+                    </div>
+                    <div class="country-card">
+                        <div class="country-flag">🇮🇳</div>
+                        <div class="country-name">India</div>
+                        <div class="country-cheese">Paneer</div>
+                    </div>
+                    <div class="country-card">
+                        <div class="country-flag">🇺🇸</div>
+                        <div class="country-name">USA</div>
+                        <div class="country-cheese">Monterey Jack</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fun-facts">
+                <h2>🎉 Fun Cheese Facts</h2>
+                <div class="facts-grid">
+                    <div class="fact-card">
+                        <div class="fact-icon">📜</div>
+                        <div class="fact-title">Ancient Origins</div>
+                        <p>Cheese-making dates back over 7,000 years to ancient Mesopotamia!</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">🌙</div>
+                        <div class="fact-title">Moon Cheese?</div>
+                        <p>The saying "the moon is made of cheese" dates back to 1546!</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">👃</div>
+                        <div class="fact-title">Cheese Dreams</div>
+                        <p>Eating cheese before bed can cause vivid dreams!</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">🏆</div>
+                        <div class="fact-title">Most Expensive</div>
+                        <p>Pule cheese costs $600/lb, made from donkey milk!</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">🔢</div>
+                        <div class="fact-title">Variety</div>
+                        <p>There are over 1,800 different types of cheese worldwide!</p>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-icon">⚖️</div>
+                        <div class="fact-title">Production</div>
+                        <p>It takes 10 lbs of milk to make just 1 lb of cheese!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cheese-quiz">
+                <h2>🧠 Cheese Quiz</h2>
+                <div id="quizContainer">
+                    <div class="quiz-question" id="quizQuestion"></div>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div class="quiz-result" id="quizResult"></div>
+                    <button class="btn btn-primary" id="nextQuizBtn" onclick="nextQuestion()" style="margin-top: 1rem; display: none;">Next Question</button>
+                </div>
+                <div class="quiz-score" style="margin-top: 1rem;">
+                    Score: <span id="quizScore">0</span> / <span id="quizTotal">0</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>🧀 Cheese Enterprise © 2024 - Made with 100% pure dairy love 🧀</p>
+    </footer>
+
+    <script>
+        const cheeses = [
+            { name: 'Cheddar', origin: '🇬🇧 England', emoji: '🧀', type: 'hard', tags: ['sharp', 'versatile'], desc: 'A sharp, aged cheese that originated in the English village of Cheddar. Perfect for sandwiches and burgers!' },
+            { name: 'Brie', origin: '🇫🇷 France', emoji: '🧀', type: 'soft', tags: ['creamy', 'mild'], desc: 'A soft, creamy cheese with an edible white rind. Known as the "Queen of Cheeses".' },
+            { name: 'Mozzarella', origin: '🇮🇹 Italy', emoji: '🧀', type: 'fresh', tags: ['stretchy', 'mild'], desc: 'A soft, fresh cheese traditionally made from water buffalo milk. The pizza essential!' },
+            { name: 'Gouda', origin: '🇳🇱 Netherlands', emoji: '🧀', type: 'hard', tags: ['sweet', 'nutty'], desc: 'A sweet, nutty cheese that gets more complex with age. Named after the city of Gouda.' },
+            { name: 'Blue Cheese', origin: '🌍 Various', emoji: '🧀', type: 'blue', tags: ['pungent', 'bold'], desc: 'Cheese with blue or green veins of mold. An acquired taste with intense flavor!' },
+            { name: 'Parmesan', origin: '🇮🇹 Italy', emoji: '🧀', type: 'hard', tags: ['savory', 'umami'], desc: 'The "King of Cheeses" - a hard, granular cheese aged for years. Perfect for pasta!' },
+            { name: 'Feta', origin: '🇬🇷 Greece', emoji: '🧀', type: 'fresh', tags: ['tangy', 'crumbly'], desc: 'A brined cheese with a tangy, salty flavor. Essential for Greek salads!' },
+            { name: 'Camembert', origin: '🇫🇷 France', emoji: '🧀', type: 'soft', tags: ['earthy', 'mushroomy'], desc: 'Similar to Brie but with a deeper, earthier flavor. Perfect when baked!' },
+            { name: 'Paneer', origin: '🇮🇳 India', emoji: '🧀', type: 'fresh', tags: ['mild', 'firm'], desc: 'A fresh cheese that doesn\'t melt. Star of many Indian dishes like Palak Paneer!' },
+            { name: 'Gruyère', origin: '🇨🇭 Switzerland', emoji: '🧀', type: 'hard', tags: ['nutty', 'complex'], desc: 'A hard Swiss cheese with a slightly sweet, nutty taste. The fondue champion!' },
+            { name: 'Roquefort', origin: '🇫🇷 France', emoji: '🧀', type: 'blue', tags: ['strong', 'tangy'], desc: 'The "King of Blues" - made from sheep milk in limestone caves of Roquefort!' },
+            { name: 'Mascarpone', origin: '🇮🇹 Italy', emoji: '🧀', type: 'soft', tags: ['rich', 'sweet'], desc: 'A thick, creamy cheese essential for Tiramisu and other Italian desserts!' },
+        ];
+
+        const quizQuestions = [
+            { q: 'Which country is Brie cheese from?', options: ['France', 'Italy', 'Switzerland', 'Spain'], answer: 'France' },
+            { q: 'What cheese is essential for pizza?', options: ['Cheddar', 'Mozzarella', 'Brie', 'Gouda'], answer: 'Mozzarella' },
+            { q: 'Parmesan is called the _____ of Cheeses?', options: ['Queen', 'King', 'Prince', 'Duke'], answer: 'King' },
+            { q: 'Which cheese is used in Tiramisu?', options: ['Ricotta', 'Mascarpone', 'Cream Cheese', 'Brie'], answer: 'Mascarpone' },
+            { q: 'Paneer comes from which country?', options: ['India', 'Pakistan', 'Thailand', 'China'], answer: 'India' },
+            { q: 'Which cheese has blue veins?', options: ['Gouda', 'Cheddar', 'Roquefort', 'Mozzarella'], answer: 'Roquefort' },
+            { q: 'Gruyère is famous for making what dish?', options: ['Pizza', 'Lasagna', 'Fondue', 'Cheesecake'], answer: 'Fondue' },
+            { q: 'Feta cheese is essential for which salad?', options: ['Caesar', 'Greek', 'Garden', 'Cobb'], answer: 'Greek' },
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        function renderCheeses(filter = 'all') {
+            const grid = document.getElementById('cheeseGrid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all' ? cheeses : cheeses.filter(c => c.type === filter);
+
+            filtered.forEach(cheese => {
+                const card = document.createElement('div');
+                card.className = 'cheese-card';
+                card.innerHTML = `
+                    <div class="cheese-image">${cheese.emoji}</div>
+                    <div class="cheese-info">
+                        <h3 class="cheese-name">${cheese.name}</h3>
+                        <div class="cheese-origin">📍 ${cheese.origin}</div>
+                        <p class="cheese-description">${cheese.desc}</p>
+                        <div class="cheese-tags">
+                            ${cheese.tags.map(tag => `<span class="cheese-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterCheese(type) {
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.textContent.toLowerCase() === type);
+            });
+            renderCheeses(type);
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= quizQuestions.length) {
+                currentQuestion = 0;
+                score = 0;
+            }
+
+            const q = quizQuestions[currentQuestion];
+            document.getElementById('quizQuestion').textContent = q.q;
+            document.getElementById('quizResult').textContent = '';
+            document.getElementById('nextQuizBtn').style.display = 'none';
+            answered = false;
+
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(option, q.answer);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quizScore').textContent = score;
+            document.getElementById('quizTotal').textContent = currentQuestion;
+        }
+
+        function checkAnswer(selected, correct) {
+            if (answered) return;
+            answered = true;
+
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                if (opt.textContent === correct) {
+                    opt.classList.add('correct');
+                } else if (opt.textContent === selected && selected !== correct) {
+                    opt.classList.add('wrong');
+                }
+            });
+
+            if (selected === correct) {
+                score++;
+                document.getElementById('quizResult').textContent = '✅ Correct!';
+            } else {
+                document.getElementById('quizResult').textContent = `❌ Wrong! The answer was ${correct}`;
+            }
+
+            document.getElementById('quizScore').textContent = score;
+            document.getElementById('quizTotal').textContent = currentQuestion + 1;
+            document.getElementById('nextQuizBtn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        window.onload = function() {
+            createStars();
+            renderCheeses();
+            loadQuestion();
+        };
+    </script>
+</body>
+</html>

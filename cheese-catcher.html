@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheese Catcher - Cheese Enterprise</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .game-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .score-panel {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--cheese-yellow);
+        }
+
+        .game-canvas {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 70%, #8B4513 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: none;
+            touch-action: none;
+        }
+
+        .basket {
+            position: absolute;
+            bottom: 20px;
+            width: 80px;
+            height: 50px;
+            background: linear-gradient(to bottom, #8B4513, #654321);
+            border-radius: 0 0 15px 15px;
+            transform: translateX(-50%);
+            transition: left 0.05s ease-out;
+            border: 3px solid #5D3A1A;
+        }
+
+        .basket::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -5px;
+            right: -5px;
+            height: 15px;
+            background: #654321;
+            border-radius: 5px;
+            border: 3px solid #5D3A1A;
+        }
+
+        .falling-item {
+            position: absolute;
+            font-size: 2.5rem;
+            transform: translateX(-50%);
+            animation: wobble 0.5s ease-in-out infinite;
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: translateX(-50%) rotate(-5deg); }
+            50% { transform: translateX(-50%) rotate(5deg); }
+        }
+
+        .power-up {
+            animation: glow 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px gold); }
+            to { filter: drop-shadow(0 0 15px gold); }
+        }
+
+        .bad-item {
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3)) hue-rotate(90deg);
+        }
+
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .game-overlay h2 {
+            font-size: 2.5rem;
+            color: var(--cheese-yellow);
+            margin-bottom: 1rem;
+        }
+
+        .final-score {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .catch-effect {
+            position: absolute;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--cheese-yellow);
+            animation: floatUp 1s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-50px) scale(1.5); }
+        }
+
+        .lives {
+            font-size: 1.5rem;
+        }
+
+        .combo-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--cheese-yellow);
+            text-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
+            animation: comboPopIn 0.5s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes comboPopIn {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cloud {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.7;
+            animation: cloudFloat linear infinite;
+        }
+
+        @keyframes cloudFloat {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(calc(100% + 100px)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span>🧀</span> Cheese Enterprise
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="games.html" class="active">Games</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="mobile-menu" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="game-wrapper">
+            <h1 class="text-center" style="color: var(--cheese-yellow); margin-bottom: 1rem;">🧀 Cheese Catcher</h1>
+
+            <div class="game-header">
+                <div class="score-panel">
+                    <div class="score-item">
+                        <div class="score-label">Score</div>
+                        <div class="score-value" id="score">0</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">High Score</div>
+                        <div class="score-value" id="highScore">0</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Lives</div>
+                        <div class="score-value lives" id="lives">❤️❤️❤️</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-canvas" id="gameCanvas">
+                <div class="cloud" style="top: 10%; animation-duration: 20s;">☁️</div>
+                <div class="cloud" style="top: 25%; animation-duration: 25s; animation-delay: -10s;">☁️</div>
+                <div class="basket" id="basket"></div>
+
+                <div class="game-overlay" id="startOverlay">
+                    <h2>🧀 Cheese Catcher</h2>
+                    <p>Catch the falling cheese!</p>
+                    <p>Avoid the moldy ones! 🤢</p>
+                    <button class="btn btn-primary" onclick="startGame()">Start Game</button>
+                </div>
+
+                <div class="game-overlay" id="gameOverOverlay" style="display: none;">
+                    <h2>Game Over!</h2>
+                    <div class="final-score">Score: <span id="finalScore">0</span></div>
+                    <button class="btn btn-primary" onclick="startGame()">Play Again</button>
+                    <a href="games.html" class="btn btn-secondary" style="margin-top: 1rem;">Back to Games</a>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <p><strong>How to play:</strong> Move your mouse or touch to control the basket</p>
+                <div class="legend">
+                    <div class="legend-item"><span>🧀</span> Cheese (+10)</div>
+                    <div class="legend-item"><span>🧈</span> Butter (+15)</div>
+                    <div class="legend-item"><span>⭐</span> Star (+50)</div>
+                    <div class="legend-item"><span>🦠</span> Mold (-1 life)</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>🧀 Cheese Enterprise © 2024 - Made with 100% pure dairy love 🧀</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const basket = document.getElementById('basket');
+        const scoreEl = document.getElementById('score');
+        const highScoreEl = document.getElementById('highScore');
+        const livesEl = document.getElementById('lives');
+        const startOverlay = document.getElementById('startOverlay');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const finalScoreEl = document.getElementById('finalScore');
+
+        let gameRunning = false;
+        let score = 0;
+        let lives = 3;
+        let highScore = localStorage.getItem('cheeseHighScore') || 0;
+        let basketX = 50;
+        let items = [];
+        let spawnInterval;
+        let gameLoop;
+        let difficulty = 1;
+        let combo = 0;
+
+        highScoreEl.textContent = highScore;
+
+        const itemTypes = [
+            { emoji: '🧀', points: 10, type: 'good', weight: 40 },
+            { emoji: '🧈', points: 15, type: 'good', weight: 25 },
+            { emoji: '🥛', points: 20, type: 'good', weight: 15 },
+            { emoji: '⭐', points: 50, type: 'powerup', weight: 5 },
+            { emoji: '🦠', points: -1, type: 'bad', weight: 15 },
+        ];
+
+        function getRandomItem() {
+            const totalWeight = itemTypes.reduce((sum, item) => sum + item.weight, 0);
+            let random = Math.random() * totalWeight;
+            for (const item of itemTypes) {
+                random -= item.weight;
+                if (random <= 0) return item;
+            }
+            return itemTypes[0];
+        }
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function updateBasketPosition(clientX) {
+            const rect = canvas.getBoundingClientRect();
+            const x = ((clientX - rect.left) / rect.width) * 100;
+            basketX = Math.max(5, Math.min(95, x));
+            basket.style.left = basketX + '%';
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (gameRunning) updateBasketPosition(e.clientX);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (gameRunning) {
+                e.preventDefault();
+                updateBasketPosition(e.touches[0].clientX);
+            }
+        });
+
+        function spawnItem() {
+            const itemData = getRandomItem();
+            const item = document.createElement('div');
+            item.className = 'falling-item';
+            if (itemData.type === 'powerup') item.classList.add('power-up');
+            if (itemData.type === 'bad') item.classList.add('bad-item');
+            item.textContent = itemData.emoji;
+            item.style.left = (Math.random() * 80 + 10) + '%';
+            item.style.top = '-50px';
+            item.dataset.points = itemData.points;
+            item.dataset.type = itemData.type;
+            canvas.appendChild(item);
+            items.push(item);
+        }
+
+        function showEffect(x, y, text, color = 'var(--cheese-yellow)') {
+            const effect = document.createElement('div');
+            effect.className = 'catch-effect';
+            effect.textContent = text;
+            effect.style.left = x + '%';
+            effect.style.top = y + 'px';
+            effect.style.color = color;
+            canvas.appendChild(effect);
+            setTimeout(() => effect.remove(), 1000);
+        }
+
+        function showCombo(comboCount) {
+            const existing = canvas.querySelector('.combo-display');
+            if (existing) existing.remove();
+
+            const comboEl = document.createElement('div');
+            comboEl.className = 'combo-display';
+            comboEl.textContent = `${comboCount}x COMBO!`;
+            canvas.appendChild(comboEl);
+            setTimeout(() => comboEl.remove(), 1000);
+        }
+
+        function updateGame() {
+            if (!gameRunning) return;
+
+            const canvasRect = canvas.getBoundingClientRect();
+            const basketRect = basket.getBoundingClientRect();
+
+            items.forEach((item, index) => {
+                const currentTop = parseFloat(item.style.top) || 0;
+                const speed = 2 + (difficulty * 0.5);
+                item.style.top = (currentTop + speed) + 'px';
+
+                const itemRect = item.getBoundingClientRect();
+
+                // Check catch
+                if (
+                    itemRect.bottom >= basketRect.top &&
+                    itemRect.top <= basketRect.bottom &&
+                    itemRect.left < basketRect.right &&
+                    itemRect.right > basketRect.left
+                ) {
+                    const points = parseInt(item.dataset.points);
+                    const type = item.dataset.type;
+
+                    if (type === 'bad') {
+                        lives--;
+                        combo = 0;
+                        updateLives();
+                        showEffect(parseFloat(item.style.left), currentTop, '-1 ❤️', '#ff4444');
+                        if (lives <= 0) endGame();
+                    } else {
+                        combo++;
+                        const comboMultiplier = Math.min(combo, 5);
+                        const finalPoints = points * comboMultiplier;
+                        score += finalPoints;
+                        scoreEl.textContent = score;
+                        showEffect(parseFloat(item.style.left), currentTop, '+' + finalPoints);
+                        if (combo >= 3 && combo % 3 === 0) showCombo(comboMultiplier);
+                    }
+
+                    item.remove();
+                    items.splice(index, 1);
+                }
+                // Check miss
+                else if (currentTop > canvasRect.height) {
+                    if (item.dataset.type !== 'bad') {
+                        combo = 0;
+                    }
+                    item.remove();
+                    items.splice(index, 1);
+                }
+            });
+
+            // Increase difficulty
+            difficulty = 1 + Math.floor(score / 100) * 0.2;
+
+            gameLoop = requestAnimationFrame(updateGame);
+        }
+
+        function updateLives() {
+            livesEl.textContent = '❤️'.repeat(lives) || '💔';
+        }
+
+        function startGame() {
+            gameRunning = true;
+            score = 0;
+            lives = 3;
+            combo = 0;
+            difficulty = 1;
+            items.forEach(item => item.remove());
+            items = [];
+
+            scoreEl.textContent = '0';
+            updateLives();
+            startOverlay.style.display = 'none';
+            gameOverOverlay.style.display = 'none';
+            basket.style.left = '50%';
+            basketX = 50;
+
+            spawnInterval = setInterval(spawnItem, 1000);
+            gameLoop = requestAnimationFrame(updateGame);
+        }
+
+        function endGame() {
+            gameRunning = false;
+            clearInterval(spawnInterval);
+            cancelAnimationFrame(gameLoop);
+
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('cheeseHighScore', highScore);
+                highScoreEl.textContent = highScore;
+            }
+
+            finalScoreEl.textContent = score;
+            gameOverOverlay.style.display = 'flex';
+        }
+
+        function toggleMobileMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        window.onload = createStars;
+    </script>
+</body>
+</html>

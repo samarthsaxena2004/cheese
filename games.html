@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games - Cheese Enterprise</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .games-hero {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .games-hero h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, var(--cheese-yellow), var(--cheese-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid rgba(255, 204, 0, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 204, 0, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--cheese-yellow);
+            box-shadow: 0 20px 40px rgba(255, 204, 0, 0.3);
+        }
+
+        .game-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .game-card:nth-child(2) .game-icon { animation-delay: 0.2s; }
+        .game-card:nth-child(3) .game-icon { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            color: var(--cheese-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        .game-description {
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .game-stat {
+            text-align: center;
+        }
+
+        .game-stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--cheese-yellow);
+        }
+
+        .game-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        .play-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--cheese-orange), var(--cheese-yellow));
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .leaderboard {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .leaderboard h2 {
+            color: var(--cheese-yellow);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .leaderboard-rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            width: 50px;
+            color: var(--cheese-yellow);
+        }
+
+        .leaderboard-name {
+            flex: 1;
+        }
+
+        .leaderboard-score {
+            font-weight: bold;
+            color: var(--cheese-yellow);
+        }
+
+        .daily-challenge {
+            background: linear-gradient(135deg, rgba(255, 107, 0, 0.2), rgba(255, 204, 0, 0.2));
+            border: 2px solid var(--cheese-yellow);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .daily-challenge h3 {
+            color: var(--cheese-yellow);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .challenge-reward {
+            display: inline-block;
+            background: var(--cheese-yellow);
+            color: var(--cheese-dark);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span>🧀</span> Cheese Enterprise
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="games.html" class="active">Games</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="mobile-menu" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="games-hero">
+            <h1>🎮 Game Zone</h1>
+            <p>Choose your cheesy adventure!</p>
+        </section>
+
+        <div class="container">
+            <div class="card-grid">
+                <a href="cheese-catcher.html" class="game-card">
+                    <span class="play-badge">PLAY NOW</span>
+                    <span class="game-icon">🧀</span>
+                    <h3 class="game-title">Cheese Catcher</h3>
+                    <p class="game-description">Catch falling cheese with your basket! Avoid the moldy ones and collect power-ups for bonus points.</p>
+                    <div class="game-stats">
+                        <div class="game-stat">
+                            <div class="game-stat-value">Easy</div>
+                            <div class="game-stat-label">Difficulty</div>
+                        </div>
+                        <div class="game-stat">
+                            <div class="game-stat-value">2 min</div>
+                            <div class="game-stat-label">Avg. Play</div>
+                        </div>
+                        <div class="game-stat">
+                            <div class="game-stat-value">⭐⭐⭐</div>
+                            <div class="game-stat-label">Rating</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="cow-clicker.html" class="game-card">
+                    <span class="play-badge">PLAY NOW</span>
+                    <span class="game-icon">🐄</span>
+                    <h3 class="game-title">Cow Clicker</h3>
+                    <p class="game-description">Build your dairy empire! Click cows, upgrade your farm, and become the ultimate cheese tycoon.</p>
+                    <div class="game-stats">
+                        <div class="game-stat">
+                            <div class="game-stat-value">Idle</div>
+                            <div class="game-stat-label">Type</div>
+                        </div>
+                        <div class="game-stat">
+                            <div class="game-stat-value">∞</div>
+                            <div class="game-stat-label">Playtime</div>
+                        </div>
+                        <div class="game-stat">
+                            <div class="game-stat-value">⭐⭐⭐</div>
+                            <div class="game-stat-label">Rating</div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="memory.html" class="game-card">
+                    <span class="play-badge">PLAY NOW</span>
+                    <span class="game-icon">🧠</span>
+                    <h3 class="game-title">Cheese Memory</h3>
+                    <p class="game-description">Test your memory with dairy products! Match pairs of cheese, milk, and more in this classic game.</p>
+                    <div class="game-stats">
+                        <div class="game-stat">
+                            <div class="game-stat-value">Medium</div>
+                            <div class="game-stat-label">Difficulty</div>
+                        </div>
+                        <div class="game-stat">
+                            <div class="game-stat-value">3 min</div>
+                            <div class="game-stat-label">Avg. Play</div>
+                        </div>
+                        <div class="game-stat">
+                            <div class="game-stat-value">⭐⭐⭐</div>
+                            <div class="game-stat-label">Rating</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="daily-challenge">
+                <h3>🏆 Daily Challenge</h3>
+                <p>Score 500+ points in Cheese Catcher today!</p>
+                <div class="challenge-reward">🧀 Reward: Golden Cheese Badge</div>
+            </div>
+
+            <div class="leaderboard">
+                <h2>🏅 Top Cheese Champions</h2>
+                <div class="leaderboard-item">
+                    <span class="leaderboard-rank">🥇</span>
+                    <span class="leaderboard-name">CheeseKing42</span>
+                    <span class="leaderboard-score">9,999 pts</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="leaderboard-rank">🥈</span>
+                    <span class="leaderboard-name">DairyQueen</span>
+                    <span class="leaderboard-score">8,750 pts</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="leaderboard-rank">🥉</span>
+                    <span class="leaderboard-name">MilkMaster</span>
+                    <span class="leaderboard-score">7,500 pts</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="leaderboard-rank">4</span>
+                    <span class="leaderboard-name">GoudaGuru</span>
+                    <span class="leaderboard-score">6,200 pts</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="leaderboard-rank">5</span>
+                    <span class="leaderboard-name">BrieBoss</span>
+                    <span class="leaderboard-score">5,800 pts</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>🧀 Cheese Enterprise © 2024 - Made with 100% pure dairy love 🧀</p>
+    </footer>
+
+    <script>
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        window.onload = createStars;
+    </script>
+</body>
+</html>

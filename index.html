@@ -3,84 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raining Cheese - The Song!</title>
+    <title>Cheese Enterprise - Home of Dairy Fun!</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            color: white;
-        }
-
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .star {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s ease-in-out infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        h1 {
-            font-size: 4rem;
-            background: linear-gradient(45deg, #ffcc00, #ff6b00, #ffcc00);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradient 3s ease infinite, float 2s ease-in-out infinite;
-            text-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle {
-            font-size: 1.5rem;
-            color: #ffcc00;
-            opacity: 0.8;
-            margin-bottom: 2rem;
-        }
-
-        @keyframes gradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
         .music-visualizer {
             display: flex;
             justify-content: center;
@@ -92,62 +17,9 @@
 
         .bar {
             width: 8px;
-            background: linear-gradient(to top, #ff6b00, #ffcc00);
+            background: linear-gradient(to top, var(--cheese-orange), var(--cheese-yellow));
             border-radius: 4px;
             transition: height 0.1s ease;
-        }
-
-        .controls {
-            margin: 2rem 0;
-        }
-
-        .play-btn {
-            background: linear-gradient(135deg, #ff6b00, #ff9500);
-            color: white;
-            border: none;
-            padding: 1.2rem 3rem;
-            font-size: 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 30px rgba(255, 107, 0, 0.5);
-            margin: 0.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .play-btn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-            transform: rotate(45deg);
-            transition: all 0.5s ease;
-        }
-
-        .play-btn:hover::before {
-            left: 100%;
-        }
-
-        .play-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 40px rgba(255, 107, 0, 0.7);
-        }
-
-        .play-btn:active {
-            transform: scale(0.98);
-        }
-
-        .play-btn.playing {
-            animation: pulse 1s ease infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 5px 30px rgba(255, 107, 0, 0.5); }
-            50% { box-shadow: 0 5px 50px rgba(255, 107, 0, 0.8); }
         }
 
         .lyrics-display {
@@ -155,8 +27,9 @@
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 2rem;
-            margin: 2rem 0;
-            min-height: 200px;
+            margin: 2rem auto;
+            max-width: 600px;
+            min-height: 150px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -164,9 +37,9 @@
         }
 
         .current-lyric {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
-            color: #ffcc00;
+            color: var(--cheese-yellow);
             animation: popIn 0.3s ease;
             text-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
         }
@@ -178,7 +51,7 @@
         }
 
         .next-lyric {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: rgba(255, 255, 255, 0.5);
             margin-top: 1rem;
         }
@@ -197,77 +70,12 @@
             100% { transform: translateY(110vh) rotate(720deg); opacity: 0.8; }
         }
 
-        .bouncing-cheese {
-            position: fixed;
-            font-size: 4rem;
-            animation: megaBounce 2s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 50;
-        }
-
-        @keyframes megaBounce {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-100px) scale(1.2); }
-        }
-
-        .song-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        .controls {
+            display: flex;
+            justify-content: center;
             gap: 1rem;
+            flex-wrap: wrap;
             margin: 2rem 0;
-        }
-
-        .info-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            padding: 1rem;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 204, 0, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .info-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255, 204, 0, 0.5);
-            box-shadow: 0 10px 30px rgba(255, 204, 0, 0.2);
-        }
-
-        .info-card h3 {
-            color: #ffcc00;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .info-card p {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .dancing-character {
-            font-size: 5rem;
-            display: inline-block;
-            animation: dance 0.5s ease-in-out infinite;
-            margin: 1rem;
-        }
-
-        @keyframes dance {
-            0%, 100% { transform: rotate(-10deg) translateY(0); }
-            25% { transform: rotate(10deg) translateY(-20px); }
-            50% { transform: rotate(-10deg) translateY(0); }
-            75% { transform: rotate(10deg) translateY(-20px); }
-        }
-
-        .stage {
-            margin: 2rem 0;
-            padding: 2rem;
-            background: linear-gradient(to top, rgba(255, 107, 0, 0.3), transparent);
-            border-radius: 20px;
-        }
-
-        footer {
-            margin-top: 3rem;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.9rem;
         }
 
         .volume-control {
@@ -292,124 +100,199 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #ffcc00;
+            background: var(--cheese-yellow);
             cursor: pointer;
             box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
         }
 
-        .disco-ball {
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle at 30% 30%, #fff, #ccc 40%, #999);
-            border-radius: 50%;
-            margin: 0 auto 1rem;
-            animation: disco 4s linear infinite;
-            box-shadow:
-                0 0 20px rgba(255, 255, 255, 0.5),
-                inset 0 0 20px rgba(0, 0, 0, 0.3);
+        .dancing-characters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
         }
 
-        @keyframes disco {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(360deg); }
+        .dancing-character {
+            font-size: 4rem;
+            animation: dance 0.5s ease-in-out infinite;
         }
 
-        .spotlight {
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255, 204, 0, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: moveSpotlight 8s ease-in-out infinite;
-            z-index: 5;
+        @keyframes dance {
+            0%, 100% { transform: rotate(-10deg) translateY(0); }
+            25% { transform: rotate(10deg) translateY(-20px); }
+            50% { transform: rotate(-10deg) translateY(0); }
+            75% { transform: rotate(10deg) translateY(-20px); }
         }
 
-        @keyframes moveSpotlight {
-            0%, 100% { top: 10%; left: 10%; }
-            25% { top: 20%; left: 70%; }
-            50% { top: 60%; left: 60%; }
-            75% { top: 50%; left: 20%; }
+        .feature-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
         }
 
-        .credits {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            display: inline-block;
-            margin-top: 1rem;
+        .feature {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 204, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--cheese-yellow);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
     <div class="stars" id="stars"></div>
-    <div class="spotlight"></div>
 
-    <div class="container">
-        <div class="disco-ball"></div>
-        <h1>Raining Cheese!</h1>
-        <p class="subtitle">An Original Cheesy Masterpiece</p>
-
-        <div class="music-visualizer" id="visualizer">
-            <!-- Bars will be generated by JS -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span>🧀</span> Cheese Enterprise
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="games.html">Games</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="mobile-menu" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
+    </nav>
 
-        <div class="controls">
-            <button class="play-btn" id="playBtn" onclick="toggleMusic()">
-                Play the Cheese Song!
-            </button>
-            <button class="play-btn" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);" onclick="partyMode()">
-                CHEESE PARTY MODE!
-            </button>
-        </div>
+    <main class="main-content">
+        <section class="hero">
+            <h1>Raining Cheese!</h1>
+            <p>The Ultimate Dairy Entertainment Experience</p>
 
-        <div class="volume-control">
-            <span>🔈</span>
-            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50" onchange="changeVolume(this.value)">
-            <span>🔊</span>
-        </div>
-
-        <div class="lyrics-display">
-            <div class="current-lyric" id="currentLyric">Press play to start the cheesy fun!</div>
-            <div class="next-lyric" id="nextLyric">🧀 Get ready for some dairy goodness 🧀</div>
-        </div>
-
-        <div class="stage" id="stage">
-            <div class="dancing-character" id="dancer1">🧀</div>
-            <div class="dancing-character" id="dancer2" style="animation-delay: 0.25s;">🧈</div>
-            <div class="dancing-character" id="dancer3" style="animation-delay: 0.5s;">🥛</div>
-            <div class="dancing-character" id="dancer4" style="animation-delay: 0.75s;">🐄</div>
-        </div>
-
-        <div class="song-info">
-            <div class="info-card">
-                <h3>TEMPO</h3>
-                <p>120 BPM</p>
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Fun Games</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Cheese Types</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Fun Factor</div>
+                </div>
             </div>
-            <div class="info-card">
-                <h3>GENRE</h3>
-                <p>Cheese-Pop</p>
+        </section>
+
+        <div class="container">
+            <div class="music-visualizer" id="visualizer"></div>
+
+            <div class="controls">
+                <button class="btn btn-primary" id="playBtn" onclick="toggleMusic()">
+                    ▶️ Play the Cheese Song!
+                </button>
+                <button class="btn btn-secondary" onclick="partyMode()">
+                    🎉 Party Mode!
+                </button>
             </div>
-            <div class="info-card">
-                <h3>MOOD</h3>
-                <p>Delicious</p>
+
+            <div class="volume-control">
+                <span>🔈</span>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50" onchange="changeVolume(this.value)">
+                <span>🔊</span>
             </div>
-            <div class="info-card">
-                <h3>KEY</h3>
-                <p>C Major</p>
+
+            <div class="lyrics-display">
+                <div class="current-lyric" id="currentLyric">Press play to start the cheesy fun!</div>
+                <div class="next-lyric" id="nextLyric">🧀 Get ready for some dairy goodness 🧀</div>
+            </div>
+
+            <div class="dancing-characters">
+                <div class="dancing-character">🧀</div>
+                <div class="dancing-character" style="animation-delay: 0.15s;">🐄</div>
+                <div class="dancing-character" style="animation-delay: 0.3s;">🥛</div>
+                <div class="dancing-character" style="animation-delay: 0.45s;">🧈</div>
+                <div class="dancing-character" style="animation-delay: 0.6s;">🐐</div>
+            </div>
+
+            <h2 class="text-center mt-2">Explore Our World</h2>
+
+            <div class="card-grid">
+                <a href="games.html" class="card">
+                    <div class="card-icon">🎮</div>
+                    <h3>Play Games</h3>
+                    <p>Catch cheese, click cows, and match dairy products in our fun mini-games!</p>
+                </a>
+                <a href="gallery.html" class="card">
+                    <div class="card-icon">🖼️</div>
+                    <h3>Cheese Gallery</h3>
+                    <p>Explore the wonderful world of cheese with facts and beautiful imagery!</p>
+                </a>
+                <a href="about.html" class="card">
+                    <div class="card-icon">📖</div>
+                    <h3>About Us</h3>
+                    <p>Learn about our mission to spread cheesy joy around the world!</p>
+                </a>
+            </div>
+
+            <h2 class="text-center mt-2">Why Cheese?</h2>
+
+            <div class="feature-highlights">
+                <div class="feature">
+                    <div class="feature-icon">🌍</div>
+                    <h4>Global Love</h4>
+                    <p>Cheese is loved in every corner of the world!</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🏆</div>
+                    <h4>Ancient History</h4>
+                    <p>Over 7,000 years of delicious tradition!</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💪</div>
+                    <h4>Nutritious</h4>
+                    <p>Packed with calcium and protein!</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">😊</div>
+                    <h4>Makes You Happy</h4>
+                    <p>Scientifically proven to bring joy!</p>
+                </div>
             </div>
         </div>
+    </main>
 
-        <footer>
-            <div class="credits">
-                "Raining Cheese" - Written by The Dairy Band<br>
-                Made with 100% pure musical cheese
-            </div>
-        </footer>
-    </div>
+    <footer class="footer">
+        <p>🧀 Cheese Enterprise © 2024 - Made with 100% pure dairy love 🧀</p>
+    </footer>
 
     <script>
-        // Audio Context and Music System
+        // Audio System
         let audioCtx = null;
         let isPlaying = false;
         let masterGain = null;
@@ -418,7 +301,6 @@
         let rainInterval = null;
         let lyricIndex = 0;
 
-        // The "Raining Cheese" Song Lyrics
         const lyrics = [
             { text: "🎵 It's raining cheese! 🎵", duration: 2000 },
             { text: "From out of the sky!", duration: 2000 },
@@ -446,22 +328,14 @@
             { text: "🧀🧀🧀 THE END 🧀🧀🧀", duration: 3000 },
         ];
 
-        // Musical notes for the melody (C major scale happy tune)
         const melodyNotes = [
-            { note: 'C4', duration: 0.25 },
-            { note: 'E4', duration: 0.25 },
-            { note: 'G4', duration: 0.25 },
-            { note: 'C5', duration: 0.5 },
-            { note: 'G4', duration: 0.25 },
-            { note: 'E4', duration: 0.25 },
-            { note: 'C4', duration: 0.5 },
-            { note: 'D4', duration: 0.25 },
-            { note: 'F4', duration: 0.25 },
-            { note: 'A4', duration: 0.25 },
-            { note: 'D5', duration: 0.5 },
-            { note: 'A4', duration: 0.25 },
-            { note: 'F4', duration: 0.25 },
-            { note: 'D4', duration: 0.5 },
+            { note: 'C4', duration: 0.25 }, { note: 'E4', duration: 0.25 },
+            { note: 'G4', duration: 0.25 }, { note: 'C5', duration: 0.5 },
+            { note: 'G4', duration: 0.25 }, { note: 'E4', duration: 0.25 },
+            { note: 'C4', duration: 0.5 }, { note: 'D4', duration: 0.25 },
+            { note: 'F4', duration: 0.25 }, { note: 'A4', duration: 0.25 },
+            { note: 'D5', duration: 0.5 }, { note: 'A4', duration: 0.25 },
+            { note: 'F4', duration: 0.25 }, { note: 'D4', duration: 0.5 },
         ];
 
         const noteFrequencies = {
@@ -470,7 +344,6 @@
             'D5': 587.33, 'E5': 659.25, 'G5': 783.99
         };
 
-        // Create stars background
         function createStars() {
             const starsContainer = document.getElementById('stars');
             for (let i = 0; i < 100; i++) {
@@ -483,7 +356,6 @@
             }
         }
 
-        // Create visualizer bars
         function createVisualizer() {
             const visualizer = document.getElementById('visualizer');
             for (let i = 0; i < 20; i++) {
@@ -494,16 +366,13 @@
             }
         }
 
-        // Animate visualizer
         function animateVisualizer() {
             const bars = document.querySelectorAll('.bar');
             bars.forEach(bar => {
-                const height = Math.random() * 60 + 10;
-                bar.style.height = height + 'px';
+                bar.style.height = (Math.random() * 60 + 10) + 'px';
             });
         }
 
-        // Initialize Audio Context
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -513,127 +382,81 @@
             }
         }
 
-        // Play a single note
         function playNote(frequency, startTime, duration, type = 'sine') {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-
             osc.connect(gain);
             gain.connect(masterGain);
-
             osc.frequency.value = frequency;
             osc.type = type;
-
             gain.gain.setValueAtTime(0.3, startTime);
             gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
-
             osc.start(startTime);
             osc.stop(startTime + duration);
         }
 
-        // Play bass note
         function playBass(frequency, startTime, duration) {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-
             osc.connect(gain);
             gain.connect(masterGain);
-
             osc.frequency.value = frequency / 2;
             osc.type = 'triangle';
-
             gain.gain.setValueAtTime(0.2, startTime);
             gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
-
             osc.start(startTime);
             osc.stop(startTime + duration);
         }
 
-        // Play drum sound
         function playDrum(startTime) {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-
             osc.connect(gain);
             gain.connect(masterGain);
-
             osc.frequency.setValueAtTime(150, startTime);
             osc.frequency.exponentialRampToValueAtTime(50, startTime + 0.1);
-            osc.type = 'sine';
-
             gain.gain.setValueAtTime(0.4, startTime);
             gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.1);
-
             osc.start(startTime);
             osc.stop(startTime + 0.1);
-
-            // Hi-hat
-            const noise = audioCtx.createOscillator();
-            const noiseGain = audioCtx.createGain();
-            noise.connect(noiseGain);
-            noiseGain.connect(masterGain);
-            noise.frequency.value = 1000;
-            noise.type = 'square';
-            noiseGain.gain.setValueAtTime(0.05, startTime + 0.25);
-            noiseGain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.3);
-            noise.start(startTime + 0.25);
-            noise.stop(startTime + 0.3);
         }
 
-        // Play the full melody loop
         function playMelodyLoop() {
             if (!isPlaying) return;
-
             const now = audioCtx.currentTime;
             let time = now;
-
-            // Play melody
             melodyNotes.forEach((noteObj, i) => {
                 const freq = noteFrequencies[noteObj.note];
                 playNote(freq, time, noteObj.duration * 0.9, 'sine');
-                playNote(freq * 2, time, noteObj.duration * 0.9, 'triangle'); // Harmony
-
+                playNote(freq * 2, time, noteObj.duration * 0.9, 'triangle');
                 if (i % 2 === 0) {
                     playBass(freq, time, noteObj.duration);
                     playDrum(time);
                 }
-
                 time += noteObj.duration;
             });
-
-            // Schedule next loop
             const loopDuration = melodyNotes.reduce((sum, n) => sum + n.duration, 0) * 1000;
             currentTimeout = setTimeout(playMelodyLoop, loopDuration);
         }
 
-        // Show lyrics
         function showLyrics() {
             if (!isPlaying || lyricIndex >= lyrics.length) {
-                if (lyricIndex >= lyrics.length) {
-                    lyricIndex = 0; // Loop back
-                }
+                if (lyricIndex >= lyrics.length) lyricIndex = 0;
                 if (!isPlaying) return;
             }
-
             const currentLyricEl = document.getElementById('currentLyric');
             const nextLyricEl = document.getElementById('nextLyric');
-
             const current = lyrics[lyricIndex];
             const next = lyrics[(lyricIndex + 1) % lyrics.length];
-
             currentLyricEl.textContent = current.text;
             currentLyricEl.style.animation = 'none';
-            currentLyricEl.offsetHeight; // Trigger reflow
+            currentLyricEl.offsetHeight;
             currentLyricEl.style.animation = 'popIn 0.3s ease';
-
             nextLyricEl.textContent = 'Next: ' + next.text;
-
             lyricIndex++;
-
             currentTimeout = setTimeout(showLyrics, current.duration);
         }
 
-        // Make it rain cheese
         function makeItRainCheese() {
             const cheeses = ['🧀', '🧈', '🥛', '🧀', '🧀'];
             const cheese = document.createElement('div');
@@ -642,59 +465,40 @@
             cheese.style.left = Math.random() * 100 + 'vw';
             cheese.style.animationDuration = (Math.random() * 2 + 2) + 's';
             document.body.appendChild(cheese);
-
             setTimeout(() => cheese.remove(), 4000);
         }
 
-        // Toggle music
         function toggleMusic() {
             initAudio();
             const btn = document.getElementById('playBtn');
-
             if (isPlaying) {
-                // Stop
                 isPlaying = false;
                 btn.textContent = '▶️ Play the Cheese Song!';
-                btn.classList.remove('playing');
                 clearTimeout(currentTimeout);
                 clearInterval(animationInterval);
                 clearInterval(rainInterval);
-
                 document.getElementById('currentLyric').textContent = 'Press play to continue!';
                 document.getElementById('nextLyric').textContent = '🧀 The cheese awaits 🧀';
             } else {
-                // Play
                 isPlaying = true;
                 lyricIndex = 0;
                 btn.textContent = '⏸️ Pause';
-                btn.classList.add('playing');
-
                 playMelodyLoop();
                 showLyrics();
-
-                // Start visualizer animation
                 animationInterval = setInterval(animateVisualizer, 100);
-
-                // Start cheese rain
                 rainInterval = setInterval(makeItRainCheese, 500);
             }
         }
 
-        // Change volume
         function changeVolume(value) {
-            if (masterGain) {
-                masterGain.gain.value = value / 100;
-            }
+            if (masterGain) masterGain.gain.value = value / 100;
         }
 
-        // Party mode!
         function partyMode() {
             initAudio();
-
-            // Intense cheese rain
             for (let i = 0; i < 50; i++) {
                 setTimeout(() => {
-                    const cheeses = ['🧀', '🧈', '🥛', '🐄', '🐐', '🍕', '🥧'];
+                    const cheeses = ['🧀', '🧈', '🥛', '🐄', '🐐', '🍕'];
                     const cheese = document.createElement('div');
                     cheese.className = 'cheese-rain';
                     cheese.textContent = cheeses[Math.floor(Math.random() * cheeses.length)];
@@ -705,40 +509,16 @@
                     setTimeout(() => cheese.remove(), 4000);
                 }, i * 50);
             }
-
-            // Bouncing cheese
-            for (let i = 0; i < 5; i++) {
-                const bigCheese = document.createElement('div');
-                bigCheese.className = 'bouncing-cheese';
-                bigCheese.textContent = '🧀';
-                bigCheese.style.left = (i * 20 + 5) + 'vw';
-                bigCheese.style.bottom = '10vh';
-                bigCheese.style.animationDelay = (i * 0.2) + 's';
-                document.body.appendChild(bigCheese);
-                setTimeout(() => bigCheese.remove(), 5000);
-            }
-
-            // Flash effect
-            document.body.style.transition = 'background 0.1s';
-            const colors = ['#ff6b00', '#ffcc00', '#ff9500', '#1a1a2e'];
-            let flashCount = 0;
-            const flashInterval = setInterval(() => {
-                document.body.style.background = colors[flashCount % colors.length];
-                flashCount++;
-                if (flashCount > 10) {
-                    clearInterval(flashInterval);
-                    document.body.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)';
-                }
-            }, 100);
-
-            // Party sound
             const now = audioCtx.currentTime;
             [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
                 playNote(freq, now + i * 0.1, 0.3, 'square');
             });
         }
 
-        // Initialize on load
+        function toggleMobileMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
         window.onload = function() {
             createStars();
             createVisualizer();

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cow Clicker - Cheese Enterprise</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .main-area {
+            text-align: center;
+        }
+
+        .milk-counter {
+            font-size: 3rem;
+            color: var(--cheese-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        .per-second {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-bottom: 2rem;
+        }
+
+        .cow-container {
+            position: relative;
+            margin: 2rem auto;
+        }
+
+        .main-cow {
+            font-size: 10rem;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            user-select: none;
+            display: inline-block;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+        }
+
+        .main-cow:hover {
+            transform: scale(1.05);
+        }
+
+        .main-cow:active {
+            transform: scale(0.95);
+        }
+
+        .main-cow.clicked {
+            animation: cowClick 0.1s ease;
+        }
+
+        @keyframes cowClick {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        .click-power {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .float-text {
+            position: absolute;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) translateX(-50%); }
+            100% { opacity: 0; transform: translateY(-100px) translateX(-50%); }
+        }
+
+        .shop-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1rem;
+        }
+
+        .shop-title {
+            font-size: 1.5rem;
+            color: var(--cheese-yellow);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .upgrade-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .upgrade-item:hover:not(.locked) {
+            border-color: var(--cheese-yellow);
+            transform: translateX(5px);
+        }
+
+        .upgrade-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .upgrade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .upgrade-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+        }
+
+        .upgrade-icon {
+            font-size: 1.5rem;
+        }
+
+        .upgrade-cost {
+            color: var(--cheese-yellow);
+            font-weight: bold;
+        }
+
+        .upgrade-desc {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .upgrade-owned {
+            font-size: 0.8rem;
+            color: var(--cheese-yellow);
+            margin-top: 0.25rem;
+        }
+
+        .achievements {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+
+        .achievement {
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        .achievement.unlocked {
+            opacity: 1;
+            background: rgba(255, 204, 0, 0.2);
+        }
+
+        .farm-display {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            min-height: 60px;
+        }
+
+        .farm-animal {
+            font-size: 2rem;
+            animation: bob 1s ease-in-out infinite;
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .stats-panel {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+        }
+
+        .prestige-btn {
+            width: 100%;
+            margin-top: 1rem;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        .prestige-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .milk-splash {
+            position: fixed;
+            font-size: 3rem;
+            pointer-events: none;
+            animation: splash 0.5s ease-out forwards;
+            z-index: 1000;
+        }
+
+        @keyframes splash {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(2) rotate(180deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span>🧀</span> Cheese Enterprise
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="games.html" class="active">Games</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="mobile-menu" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h1 class="text-center" style="color: var(--cheese-yellow);">🐄 Cow Clicker Tycoon</h1>
+
+        <div class="game-layout">
+            <div class="main-area">
+                <div class="milk-counter">🥛 <span id="milkCount">0</span></div>
+                <div class="per-second"><span id="perSecond">0</span> milk per second</div>
+
+                <div class="cow-container">
+                    <div class="main-cow" id="mainCow" onclick="clickCow(event)">🐄</div>
+                </div>
+
+                <div class="click-power">
+                    Click Power: <span id="clickPower">1</span> 🥛 per click
+                </div>
+
+                <div class="farm-display" id="farmDisplay"></div>
+
+                <div class="stats-panel">
+                    <h4 style="color: var(--cheese-yellow); margin-bottom: 0.5rem;">📊 Statistics</h4>
+                    <div class="stat-row">
+                        <span>Total Clicks:</span>
+                        <span id="totalClicks">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Total Milk Earned:</span>
+                        <span id="totalMilk">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Prestige Level:</span>
+                        <span id="prestigeLevel">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shop-panel">
+                <h3 class="shop-title">🏪 Upgrades Shop</h3>
+
+                <div id="upgradesList"></div>
+
+                <button class="btn prestige-btn" id="prestigeBtn" onclick="prestige()" disabled>
+                    ⭐ Prestige (Need 10,000 🥛)
+                </button>
+
+                <div class="achievements">
+                    <h4 style="color: var(--cheese-yellow); margin-bottom: 0.5rem;">🏆 Achievements</h4>
+                    <div class="achievement-grid" id="achievementGrid"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>🧀 Cheese Enterprise © 2024 - Made with 100% pure dairy love 🧀</p>
+    </footer>
+
+    <script>
+        // Game State
+        let milk = 0;
+        let totalMilk = 0;
+        let totalClicks = 0;
+        let clickPower = 1;
+        let milkPerSecond = 0;
+        let prestigeLevel = 0;
+
+        const upgrades = [
+            { id: 'cursor', name: 'Auto Clicker', icon: '👆', baseCost: 15, mps: 0.1, owned: 0, desc: '+0.1 milk/sec' },
+            { id: 'cow', name: 'Baby Cow', icon: '🐮', baseCost: 100, mps: 1, owned: 0, desc: '+1 milk/sec' },
+            { id: 'goat', name: 'Dairy Goat', icon: '🐐', baseCost: 500, mps: 5, owned: 0, desc: '+5 milk/sec' },
+            { id: 'farm', name: 'Mini Farm', icon: '🏠', baseCost: 2000, mps: 20, owned: 0, desc: '+20 milk/sec' },
+            { id: 'factory', name: 'Cheese Factory', icon: '🏭', baseCost: 10000, mps: 100, owned: 0, desc: '+100 milk/sec' },
+            { id: 'click1', name: 'Better Hands', icon: '🤲', baseCost: 50, clickBonus: 1, owned: 0, desc: '+1 click power', maxOwned: 10 },
+            { id: 'click2', name: 'Golden Touch', icon: '✨', baseCost: 500, clickBonus: 5, owned: 0, desc: '+5 click power', maxOwned: 5 },
+        ];
+
+        const achievements = [
+            { id: 'click100', icon: '👆', name: '100 Clicks', condition: () => totalClicks >= 100 },
+            { id: 'click1000', icon: '🖱️', name: '1000 Clicks', condition: () => totalClicks >= 1000 },
+            { id: 'milk1000', icon: '🥛', name: '1000 Milk', condition: () => totalMilk >= 1000 },
+            { id: 'milk10000', icon: '🧴', name: '10K Milk', condition: () => totalMilk >= 10000 },
+            { id: 'mps10', icon: '⚡', name: '10 MPS', condition: () => milkPerSecond >= 10 },
+            { id: 'mps100', icon: '🚀', name: '100 MPS', condition: () => milkPerSecond >= 100 },
+            { id: 'prestige1', icon: '⭐', name: 'First Prestige', condition: () => prestigeLevel >= 1 },
+            { id: 'cow5', icon: '🐄', name: '5 Cows', condition: () => upgrades.find(u => u.id === 'cow').owned >= 5 },
+        ];
+
+        let unlockedAchievements = new Set();
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(2) + 'K';
+            return Math.floor(num).toString();
+        }
+
+        function getCost(upgrade) {
+            return Math.floor(upgrade.baseCost * Math.pow(1.15, upgrade.owned));
+        }
+
+        function updateDisplay() {
+            document.getElementById('milkCount').textContent = formatNumber(milk);
+            document.getElementById('perSecond').textContent = formatNumber(milkPerSecond);
+            document.getElementById('clickPower').textContent = clickPower;
+            document.getElementById('totalClicks').textContent = formatNumber(totalClicks);
+            document.getElementById('totalMilk').textContent = formatNumber(totalMilk);
+            document.getElementById('prestigeLevel').textContent = prestigeLevel;
+
+            const prestigeBtn = document.getElementById('prestigeBtn');
+            prestigeBtn.disabled = milk < 10000;
+            prestigeBtn.textContent = milk >= 10000 ? '⭐ Prestige Now!' : '⭐ Prestige (Need 10,000 🥛)';
+
+            renderUpgrades();
+            updateFarmDisplay();
+            checkAchievements();
+        }
+
+        function renderUpgrades() {
+            const container = document.getElementById('upgradesList');
+            container.innerHTML = '';
+
+            upgrades.forEach(upgrade => {
+                const cost = getCost(upgrade);
+                const canAfford = milk >= cost;
+                const maxedOut = upgrade.maxOwned && upgrade.owned >= upgrade.maxOwned;
+
+                const div = document.createElement('div');
+                div.className = 'upgrade-item' + (!canAfford || maxedOut ? ' locked' : '');
+                div.innerHTML = `
+                    <div class="upgrade-header">
+                        <span class="upgrade-name">
+                            <span class="upgrade-icon">${upgrade.icon}</span>
+                            ${upgrade.name}
+                        </span>
+                        <span class="upgrade-cost">${maxedOut ? 'MAX' : formatNumber(cost) + ' 🥛'}</span>
+                    </div>
+                    <div class="upgrade-desc">${upgrade.desc}</div>
+                    <div class="upgrade-owned">Owned: ${upgrade.owned}${upgrade.maxOwned ? '/' + upgrade.maxOwned : ''}</div>
+                `;
+
+                if (!maxedOut) {
+                    div.onclick = () => buyUpgrade(upgrade);
+                }
+
+                container.appendChild(div);
+            });
+        }
+
+        function renderAchievements() {
+            const container = document.getElementById('achievementGrid');
+            container.innerHTML = '';
+
+            achievements.forEach(ach => {
+                const div = document.createElement('div');
+                div.className = 'achievement' + (unlockedAchievements.has(ach.id) ? ' unlocked' : '');
+                div.textContent = ach.icon;
+                div.title = ach.name;
+                container.appendChild(div);
+            });
+        }
+
+        function checkAchievements() {
+            achievements.forEach(ach => {
+                if (!unlockedAchievements.has(ach.id) && ach.condition()) {
+                    unlockedAchievements.add(ach.id);
+                    showAchievement(ach);
+                }
+            });
+            renderAchievements();
+        }
+
+        function showAchievement(ach) {
+            const splash = document.createElement('div');
+            splash.className = 'milk-splash';
+            splash.textContent = '🏆';
+            splash.style.left = '50%';
+            splash.style.top = '50%';
+            document.body.appendChild(splash);
+            setTimeout(() => splash.remove(), 500);
+        }
+
+        function updateFarmDisplay() {
+            const container = document.getElementById('farmDisplay');
+            container.innerHTML = '';
+
+            const cowUpgrade = upgrades.find(u => u.id === 'cow');
+            const goatUpgrade = upgrades.find(u => u.id === 'goat');
+
+            for (let i = 0; i < Math.min(cowUpgrade.owned, 10); i++) {
+                const animal = document.createElement('span');
+                animal.className = 'farm-animal';
+                animal.textContent = '🐮';
+                animal.style.animationDelay = (i * 0.1) + 's';
+                container.appendChild(animal);
+            }
+
+            for (let i = 0; i < Math.min(goatUpgrade.owned, 5); i++) {
+                const animal = document.createElement('span');
+                animal.className = 'farm-animal';
+                animal.textContent = '🐐';
+                animal.style.animationDelay = (i * 0.15) + 's';
+                container.appendChild(animal);
+            }
+        }
+
+        function clickCow(event) {
+            const prestigeBonus = 1 + (prestigeLevel * 0.1);
+            const gained = clickPower * prestigeBonus;
+            milk += gained;
+            totalMilk += gained;
+            totalClicks++;
+
+            // Visual feedback
+            const cow = document.getElementById('mainCow');
+            cow.classList.add('clicked');
+            setTimeout(() => cow.classList.remove('clicked'), 100);
+
+            // Float text
+            const container = document.querySelector('.cow-container');
+            const rect = container.getBoundingClientRect();
+            const float = document.createElement('div');
+            float.className = 'float-text';
+            float.textContent = '+' + formatNumber(gained) + ' 🥛';
+            float.style.left = (event.clientX - rect.left) + 'px';
+            float.style.top = (event.clientY - rect.top) + 'px';
+            container.appendChild(float);
+            setTimeout(() => float.remove(), 1000);
+
+            updateDisplay();
+            saveGame();
+        }
+
+        function buyUpgrade(upgrade) {
+            const cost = getCost(upgrade);
+            if (milk < cost) return;
+            if (upgrade.maxOwned && upgrade.owned >= upgrade.maxOwned) return;
+
+            milk -= cost;
+            upgrade.owned++;
+
+            if (upgrade.mps) {
+                milkPerSecond += upgrade.mps;
+            }
+            if (upgrade.clickBonus) {
+                clickPower += upgrade.clickBonus;
+            }
+
+            updateDisplay();
+            saveGame();
+        }
+
+        function prestige() {
+            if (milk < 10000) return;
+
+            prestigeLevel++;
+            milk = 0;
+            totalMilk = 0;
+            milkPerSecond = 0;
+            clickPower = 1;
+
+            upgrades.forEach(u => {
+                u.owned = 0;
+            });
+
+            updateDisplay();
+            saveGame();
+
+            // Celebration
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const splash = document.createElement('div');
+                    splash.className = 'milk-splash';
+                    splash.textContent = '⭐';
+                    splash.style.left = (Math.random() * 80 + 10) + '%';
+                    splash.style.top = (Math.random() * 80 + 10) + '%';
+                    document.body.appendChild(splash);
+                    setTimeout(() => splash.remove(), 500);
+                }, i * 100);
+            }
+        }
+
+        function gameLoop() {
+            const prestigeBonus = 1 + (prestigeLevel * 0.1);
+            const gained = (milkPerSecond / 10) * prestigeBonus;
+            milk += gained;
+            totalMilk += gained;
+            updateDisplay();
+        }
+
+        function saveGame() {
+            const saveData = {
+                milk, totalMilk, totalClicks, clickPower, milkPerSecond, prestigeLevel,
+                upgrades: upgrades.map(u => ({ id: u.id, owned: u.owned })),
+                achievements: Array.from(unlockedAchievements)
+            };
+            localStorage.setItem('cowClickerSave', JSON.stringify(saveData));
+        }
+
+        function loadGame() {
+            const saveData = localStorage.getItem('cowClickerSave');
+            if (saveData) {
+                const data = JSON.parse(saveData);
+                milk = data.milk || 0;
+                totalMilk = data.totalMilk || 0;
+                totalClicks = data.totalClicks || 0;
+                clickPower = data.clickPower || 1;
+                milkPerSecond = data.milkPerSecond || 0;
+                prestigeLevel = data.prestigeLevel || 0;
+
+                if (data.upgrades) {
+                    data.upgrades.forEach(saved => {
+                        const upgrade = upgrades.find(u => u.id === saved.id);
+                        if (upgrade) upgrade.owned = saved.owned;
+                    });
+                }
+
+                if (data.achievements) {
+                    unlockedAchievements = new Set(data.achievements);
+                }
+            }
+        }
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        // Initialize
+        window.onload = function() {
+            createStars();
+            loadGame();
+            renderAchievements();
+            updateDisplay();
+            setInterval(gameLoop, 100);
+            setInterval(saveGame, 30000);
+        };
+    </script>
+</body>
+</html>
